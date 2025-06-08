@@ -1,3 +1,13 @@
+### Datasette Fork
+
+A customized version of datasette for use in [Open Data Explorer](https://github.com/Findus23/open-data-explorer). Still very WIP.
+
+- translated to German
+- using Metadata titles instead of DB/table names in more places
+
+----------------
+
+
 <img src="https://datasette.io/static/datasette-logo.svg" alt="Datasette">
 
 [![PyPI](https://img.shields.io/pypi/v/datasette.svg)](https://pypi.org/project/datasette/)
