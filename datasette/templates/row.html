@@ -29,12 +29,12 @@
 
 {% block description_source_license %}{% include "_description_source_license.html" %}{% endblock %}
 
-<p>This data as {% for name, url in renderers.items() %}<a href="{{ url }}">{{ name }}</a>{{ ", " if not loop.last }}{% endfor %}</p>
+<p>{% trans %}This data as {% endtrans %}{% for name, url in renderers.items() %}<a href="{{ url }}">{{ name }}</a>{{ ", " if not loop.last }}{% endfor %}</p>
 
 {% include custom_table_templates %}
 
 {% if foreign_key_tables %}
-    <h2>Links from other tables</h2>
+    <h2>{% trans %}Links from other tables{% endtrans %}</h2>
     <ul>
         {% for other in foreign_key_tables %}
             <li>

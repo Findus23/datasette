@@ -1,3 +1,6 @@
+from gettext import GNUTranslations
+from io import BytesIO
+
 from asgi_csrf import Errors
 import asyncio
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Union
@@ -11,6 +14,10 @@ import hashlib
 import httpx
 import importlib.metadata
 import inspect
+
+from babel.messages.mofile import write_mo
+from babel.messages.pofile import read_po
+from babel.support import Translations
 from itsdangerous import BadSignature
 import json
 import os
@@ -331,7 +338,6 @@ class Datasette:
         else:
             self._internal_database = Database(self, path=internal, mode="rwc")
         self._internal_database.name = INTERNAL_DB_NAME
-
         self.cache_headers = cache_headers
         self.cors = cors
         config_files = []
@@ -442,8 +448,19 @@ class Datasette:
             loader=template_loader,
             autoescape=True,
             enable_async=True,
+            extensions=["jinja2.ext.i18n"]
             # undefined=StrictUndefined,
         )
+        trans_dir=Path(__file__).resolve().parent.parent/"translations"
+        translations = Translations.load(trans_dir, ["de", "en"])
+        po_de_file=trans_dir/"de"/"LC_MESSAGES"/"messages.po"
+        with open(po_de_file, "r", encoding="utf-8") as po_file:
+            catalog = read_po(po_file)
+            buf = BytesIO()
+            write_mo(buf, catalog)
+            buf.seek(0)
+            translations = GNUTranslations(fp=buf)
+        environment.install_gettext_translations(translations)
         environment.filters["escape_css_string"] = escape_css_string
         environment.filters["quote_plus"] = urllib.parse.quote_plus
         self._jinja_env = environment
@@ -946,10 +963,15 @@ class Datasette:
                 action="view-database",
                 resource=database,
             ):
+                metadata=await self.get_database_metadata(database)
+                if "title" in metadata:
+                    label = metadata["title"]
+                else:
+                    label = database
                 crumbs.append(
                     {
                         "href": self.urls.database(database),
-                        "label": database,
+                        "label": label,
                     }
                 )
         # Table link

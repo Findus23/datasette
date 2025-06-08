@@ -40,3 +40,12 @@ export DATASETTE_SECRET := "not_a_secret"
   pipenv run sqlite-utils create-database data.db
   pipenv run sqlite-utils create-table data.db docs id integer title text --pk id --ignore
   pipenv run python -m datasette data.db --root --reload
+
+@extract_translations:
+  pybabel extract -F mapping.ini -o translations/messages.pot datasette/templates/*
+
+@update_translations:
+  pybabel update -i translations/messages.pot -d translations
+
+@compile_translations:
+  pybabel compile  -d translations --statistics
