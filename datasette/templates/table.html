@@ -50,13 +50,13 @@
 
 <form class="core" class="filters" action="{{ urls.table(database, table) }}" method="get">
     {% if supports_search %}
-        <div class="search-row"><label for="_search">Search:</label><input id="_search" type="search" name="_search" value="{{ search }}"></div>
+        <div class="search-row"><label for="_search">{% trans %}Search:{% endtrans %}</label><input id="_search" type="search" name="_search" value="{{ search }}"></div>
     {% endif %}
     {% for column, lookup, value in filters.selections() %}
         <div class="filter-row">
             <div class="select-wrapper">
                 <select name="_filter_column_{{ loop.index }}">
-                    <option value="">- remove filter -</option>
+                    <option value="">- {% trans %}remove filter{% endtrans %} -</option>
                     {% for c in filter_columns %}
                           <option{% if c == column %} selected{% endif %}>{{ c }}</option>
                     {% endfor %}
@@ -73,7 +73,7 @@
     <div class="filter-row">
         <div class="select-wrapper">
             <select name="_filter_column">
-                <option value="">- column -</option>
+                <option value="">- {% trans %}column{% endtrans %} -</option>
                 {% for column in filter_columns %}
                       <option>{{ column }}</option>
                 {% endfor %}
@@ -98,12 +98,12 @@
                     {% endfor %}
                 </select>
             </div>
-            <label class="sort_by_desc small-screen-only"><input type="checkbox" name="_sort_by_desc"{% if sort_desc %} checked{% endif %}> descending</label>
+            <label class="sort_by_desc small-screen-only"><input type="checkbox" name="_sort_by_desc"{% if sort_desc %} checked{% endif %}> {% trans %}descending{% endtrans %}</label>
         {% endif %}
         {% for key, value in form_hidden_args %}
             <input type="hidden" name="{{ key }}" value="{{ value }}">
         {% endfor %}
-        <input type="submit" value="Apply">
+        <input type="submit" value="{% trans %}Apply{% endtrans %}">
     </div>
 </form>
 
@@ -119,17 +119,17 @@
 {% endif %}
 
 {% if query.sql and allow_execute_sql %}
-    <p><a class="not-underlined" title="{{ query.sql }}" href="{{ urls.database(database) }}?{{ {'sql': query.sql}|urlencode|safe }}{% if query.params %}&amp;{{ query.params|urlencode|safe }}{% endif %}">&#x270e; <span class="underlined">View and edit SQL</span></a></p>
+    <p><a class="not-underlined" title="{{ query.sql }}" href="{{ urls.database(database) }}?{{ {'sql': query.sql}|urlencode|safe }}{% if query.params %}&amp;{{ query.params|urlencode|safe }}{% endif %}">&#x270e; <span class="underlined">{% trans %}View and edit SQL{% endtrans %}</span></a></p>
 {% endif %}
 
-<p class="export-links">This data as {% for name, url in renderers.items() %}<a href="{{ url }}">{{ name }}</a>{{ ", " if not loop.last }}{% endfor %}{% if display_rows %}, <a href="{{ url_csv }}">CSV</a> (<a href="#export">advanced</a>){% endif %}</p>
+<p class="export-links">{% trans %}This data as{% endtrans %} {% for name, url in renderers.items() %}<a href="{{ url }}">{{ name }}</a>{{ ", " if not loop.last }}{% endfor %}{% if display_rows %}, <a href="{{ url_csv }}">CSV</a> (<a href="#export">{% trans %}advanced{% endtrans %}</a>){% endif %}</p>
 
 {% if suggested_facets %}
     {% include "_suggested_facets.html" %}
 {% endif %}
 
 {% if facets_timed_out %}
-    <p class="facets-timed-out">These facets timed out: {{ ", ".join(facets_timed_out) }}</p>
+    <p class="facets-timed-out">{% trans %}These facets timed out:{% endtrans %} {{ ", ".join(facets_timed_out) }}</p>
 {% endif %}
 
 {% if facet_results %}
@@ -139,13 +139,13 @@
 {% include custom_table_templates %}
 
 {% if next_url %}
-     <p><a href="{{ next_url }}">Next page</a></p>
+     <p><a href="{{ next_url }}">{% trans %}Next page{% endtrans %}</a></p>
 {% endif %}
 
 {% if display_rows %}
     <div id="export" class="advanced-export">
-        <h3>Advanced export</h3>
-        <p>JSON shape:
+        <h3>{% trans %}Advanced export{% endtrans %}</h3>
+        <p>{% trans %}JSON shape{% endtrans %}:
             <a href="{{ renderers['json'] }}">default</a>,
             <a href="{{ append_querystring(renderers['json'], '_shape=array') }}">array</a>,
             <a href="{{ append_querystring(renderers['json'], '_shape=array&_nl=on') }}">newline-delimited</a>{% if primary_keys %},
@@ -154,11 +154,11 @@
         </p>
         <form class="core" action="{{ url_csv_path }}" method="get">
             <p>
-                CSV options:
-                <label><input type="checkbox" name="_dl"> download file</label>
-                {% if expandable_columns %}<label><input type="checkbox" name="_labels" checked> expand labels</label>{% endif %}
-                {% if next_url and settings.allow_csv_stream %}<label><input type="checkbox" name="_stream"> stream all rows</label>{% endif %}
-                <input type="submit" value="Export CSV">
+                {% trans %}CSV options{% endtrans %}:
+                <label><input type="checkbox" name="_dl"> {% trans %}download file{% endtrans %}</label>
+                {% if expandable_columns %}<label><input type="checkbox" name="_labels" checked> {% trans %}expand labels{% endtrans %}</label>{% endif %}
+                {% if next_url and settings.allow_csv_stream %}<label><input type="checkbox" name="_stream"> {% trans %}stream all rows{% endtrans %}</label>{% endif %}
+                <input type="submit" value="{% trans %}Export CSV{% endtrans %}">
                 {% for key, value in url_csv_hidden_args %}
                     <input type="hidden" name="{{ key }}" value="{{ value }}">
                 {% endfor %}
