@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ database }}: {{ table }}{% endblock %}
+{% block title %}{{ table }}: {{ ', '.join(primary_key_values) }}{% endblock %}
 
 {% block extra_head %}
 {{- super() -}}
