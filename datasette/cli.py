@@ -148,6 +148,7 @@ async def inspect_(files, sqlite_extensions):
     app = Datasette([], immutables=files, sqlite_extensions=sqlite_extensions)
     data = {}
     for name, database in app.databases.items():
+        database.count_limit = 100000000
         counts = await database.table_counts(limit=3600 * 1000)
         data[name] = {
             "hash": database.hash,
